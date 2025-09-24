@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // --- Testimonial Slider Logic ---
     let currentSlide = 0;
     const slides = document.querySelectorAll('.testimonial-slide');
     const totalSlides = slides.length;
@@ -6,63 +7,70 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextButton = document.getElementById('next');
     const testimonialContainer = document.querySelector('.testimonial-container');
 
-    // Add a window resize listener to adjust the slide width dynamically
-    function getSlideWidth() {
-        return slides[0].clientWidth + 20; // width of slide + margin
+    if (slides.length > 0) {
+        // Function to move to a specific slide
+        function goToSlide(slideIndex) {
+            testimonialContainer.style.transform = `translateX(-${slideIndex * 100}%)`;
+        }
+
+        // Show next slide
+        function showNextSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Show previous slide
+        function showPrevSlide() {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            goToSlide(currentSlide);
+        }
+
+        // Next button click event
+        if (nextButton) {
+            nextButton.addEventListener('click', () => {
+                showNextSlide();
+                restartInterval();
+            });
+        }
+
+        // Prev button click event
+        if (prevButton) {
+            prevButton.addEventListener('click', () => {
+                showPrevSlide();
+                restartInterval();
+            });
+        }
+        
+        // Automatically advance the slides every 5 seconds
+        let slideInterval = setInterval(showNextSlide, 5000);
+
+        // Restart the interval after a manual slide change
+        function restartInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(showNextSlide, 5000);
+        }
+
+        // Initialize slider
+        goToSlide(0);
     }
 
-    // Apply smooth transition to the testimonial container
-    testimonialContainer.style.transition = 'transform 0.5s ease';
+    // --- Hamburger Menu Logic ---
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.navbar');
+    const navLinks = document.querySelectorAll('.navbar a');
 
-    // Function to show a slide
-    function showSlide(index) {
-        const slideWidth = getSlideWidth(); // dynamically get the width every time
-        const offset = -index * slideWidth;
-        testimonialContainer.style.transform = `translateX(${offset}px)`;
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
     }
-
-    // Show next slide
-    function showNextSlide() {
-        currentSlide = (currentSlide + 1) % totalSlides;
-        showSlide(currentSlide);
-    }
-
-    // Show previous slide
-    function showPrevSlide() {
-        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-        showSlide(currentSlide);
-    }
-
-    // Next button click event
-    nextButton.addEventListener('click', function () {
-        showNextSlide();
-        restartInterval();
-    });
-
-    // Prev button click event
-    prevButton.addEventListener('click', function () {
-        showPrevSlide();
-        restartInterval();
-    });
-
-    // Automatically advance the slides every 5 seconds
-    let slideInterval = setInterval(showNextSlide, 5000);
-
-    // Restart the interval after a manual slide change
-    function restartInterval() {
-        clearInterval(slideInterval);
-        slideInterval = setInterval(showNextSlide, 5000);
-    }
-
-    // Accessibility improvements for buttons
-    prevButton.setAttribute('aria-label', 'Previous Testimonial');
-    nextButton.setAttribute('aria-label', 'Next Testimonial');
-
-    // Make sure the first slide shows correctly
-    showSlide(currentSlide);
-
-    // Handle resizing of the window to adjust the slide width accordingly
-    window.addEventListener('resize', function () {
-        showSlide(currentSlide); // Recalculate and show the correct slide
-    });
 });
