@@ -429,15 +429,37 @@ body {
 }
 
 @media (max-width: 576px) {
+    /* Keep Stats 2 per row (looks good) */
     .stat-card {
         width: calc(50% - 10px);
-    }
-    .gallery-card {
-        width: 100%;
+        padding: 15px; /* Reduce padding to fit smaller boxes */
     }
     
+    /* FIX: Force Photos to stay 2 per row instead of 1 */
+    .gallery-card {
+        width: calc(50% - 10px);
+    }
+    
+    /* Reduce font size on cards so they fit in 2 columns */
+    .gallery-card p {
+        font-size: 0.9rem;
+        padding: 10px 5px;
+    }
+
+    /* Optional: Keep Services 1 per row or make 2 per row */
     .service-card {
-        width: 100%;
+        width: 100%; 
         max-width: 350px;
+        margin-bottom: 10px; /* Reduce gap between cards */
+    }
+    
+    /* Reduce section padding to save vertical space */
+    .about, .assurance, .stats, .services, .tour-photos, .testimonials {
+        padding: 30px 15px; /* Was 60px 20px */
+    }
+    
+    .about h2, .assurance h2, .stats h2, .services h2, .tour-photos h2 {
+        font-size: 1.8rem; /* Smaller headers */
+        margin-bottom: 15px;
     }
 }
